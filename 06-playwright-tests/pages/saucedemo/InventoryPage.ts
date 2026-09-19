@@ -44,6 +44,11 @@ export class InventoryPage {
     return this
   }
 
+  async removeFromCart(slug: string): Promise<this> {
+    await this.removeButton(slug).click()
+    return this
+  }
+
   async openCart(): Promise<this> {
     await this.cartLink.click()
     return this
@@ -77,8 +82,27 @@ export class InventoryPage {
     return this
   }
 
+  async assertProductsHaveNamesAndPrices(): Promise<this> {
+    const names = await this.itemNames.allInnerTexts()
+    const priceTexts = await this.itemPrices.allInnerTexts()
+
+    expect(names).toHaveLength(6)
+    expect(names.every((name) => name.trim().length > 0), 'every product needs a name').toBe(true)
+    expect(priceTexts).toHaveLength(6)
+    expect(
+      priceTexts.every((price) => /^\$\d+\.\d{2}$/.test(price.trim())),
+      'every product needs a numeric price',
+    ).toBe(true)
+    return this
+  }
+
   async assertCartBadgeCount(expected: number): Promise<this> {
     await expect(this.cartBadge).toHaveText(String(expected))
+    return this
+  }
+
+  async assertCartIsEmpty(): Promise<this> {
+    await expect(this.cartBadge).toHaveCount(0)
     return this
   }
 
@@ -87,6 +111,14 @@ export class InventoryPage {
     const prices = texts.map((t) => parseFloat(t.replace('$', '')))
     const sorted = [...prices].sort((a, b) => a - b)
     expect(prices, 'prices should be ascending').toEqual(sorted)
+    return this
+  }
+
+  async assertPricesDescending(): Promise<this> {
+    const texts = await this.itemPrices.allInnerTexts()
+    const prices = texts.map((text) => parseFloat(text.replace('$', '')))
+    const sorted = [...prices].sort((a, b) => b - a)
+    expect(prices, 'prices should be descending').toEqual(sorted)
     return this
   }
 

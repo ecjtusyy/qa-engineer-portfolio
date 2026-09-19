@@ -58,9 +58,9 @@ export const saucedemo = {
   problem: 'problem_user',
   wrongPassword: 'definitely_wrong_password',
   buyer: {
-    firstName: 'Orkhan',
-    lastName: 'Aliyev',
-    postalCode: 'AZ1000',
+    firstName: 'Test',
+    lastName: 'User',
+    postalCode: '10001',
   },
 } as const
 

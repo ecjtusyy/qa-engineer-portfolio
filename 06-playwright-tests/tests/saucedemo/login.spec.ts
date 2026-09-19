@@ -21,35 +21,35 @@ test.describe('SauceDemo — Login Flow', () => {
     await loginPage.visit()
   })
 
-  test('TC-SAUCE-LOGIN-001 | Positive | Login page renders username, password, and button', async () => {
+  test('TC-001 | Login controls are available @regression', async () => {
     await expect(loginPage.username).toBeVisible()
     await expect(loginPage.password).toBeVisible()
     await expect(loginPage.loginButton).toBeVisible()
   })
 
-  test('TC-SAUCE-LOGIN-002 | Positive | standard_user logs in and reaches the inventory', async () => {
+  test('TC-002 | Standard user can log in @smoke @regression', async () => {
     await loginPage.loginAs(sd.standard, sd.password)
     await loginPage.assertOnInventory()
   })
 
-  test('TC-SAUCE-LOGIN-003 | Negative | locked_out_user sees the lockout error', async () => {
+  test('TC-003 | Locked user is rejected @regression', async () => {
     await loginPage.loginAs(sd.lockedOut, sd.password)
     await loginPage.assertErrorContains('Sorry, this user has been locked out')
     await loginPage.assertStillOnLogin()
   })
 
-  test('TC-SAUCE-LOGIN-004 | Negative | Wrong password is rejected', async () => {
+  test('TC-004 | Wrong password is rejected @regression', async () => {
     await loginPage.loginAs(sd.standard, sd.wrongPassword)
     await loginPage.assertErrorContains('Username and password do not match')
     await loginPage.assertStillOnLogin()
   })
 
-  test('TC-SAUCE-LOGIN-005 | Negative | Missing username is rejected', async () => {
+  test('TC-005 | Username is required @regression', async () => {
     await loginPage.loginAs(undefined, sd.password)
     await loginPage.assertErrorContains('Username is required')
   })
 
-  test('TC-SAUCE-LOGIN-006 | Negative | Missing password is rejected', async () => {
+  test('TC-006 | Password is required @regression', async () => {
     await loginPage.loginAs(sd.standard, undefined)
     await loginPage.assertErrorContains('Password is required')
   })

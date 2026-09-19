@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test'
+import { test, Page } from '@playwright/test'
 import { LoginPage } from '../../pages/saucedemo/LoginPage'
 import { InventoryPage } from '../../pages/saucedemo/InventoryPage'
 import { CartPage } from '../../pages/saucedemo/CartPage'
@@ -20,7 +20,7 @@ import { saucedemo as sd } from '../../fixtures/test-data'
  * testIsolation:false approach and avoids hammering the demo CDN with
  * a fresh login per test.
  *
- * Mirrors 05-cypress-tests/cypress/e2e/saucedemo/checkout.cy.js — same TC IDs.
+ * This focused case-study suite maps directly to docs/saucedemo/RTM.md.
  */
 
 const BACKPACK = 'sauce-labs-backpack'
@@ -58,28 +58,42 @@ test.describe.serial('SauceDemo — Full Purchase Flow', () => {
 
   // ---- INVENTORY ----------------------------------------------
 
-  test('TC-SAUCE-INV-001 | Positive | Inventory lists all 6 products', async () => {
+  test('TC-007 | Product catalog is complete @regression', async () => {
     await inventory.assertItemCount(6)
+    await inventory.assertProductsHaveNamesAndPrices()
   })
 
-  test('TC-SAUCE-INV-002 | Positive | Sort by price low-to-high orders prices ascending', async () => {
+  test('TC-008 | Products sort by price low to high @regression', async () => {
     await inventory.sortBy('lohi')
     await inventory.assertPricesAscending()
   })
 
-  test('TC-SAUCE-INV-003 | Positive | Sort by name Z-to-A orders names descending', async () => {
+  test('TC-009 | Products sort by name Z to A @regression', async () => {
     await inventory.sortBy('za')
     await inventory.assertNamesDescending()
   })
 
-  test('TC-SAUCE-INV-004 | Positive | Adding a product increments the cart badge', async () => {
+  test('TC-010 | Products sort by price high to low @regression', async () => {
+    await inventory.sortBy('hilo')
+    await inventory.assertPricesDescending()
+  })
+
+  test('TC-011 | Add one product to cart @smoke @regression', async () => {
     await inventory.addToCart(BACKPACK)
     await inventory.assertCartBadgeCount(1)
+    await inventory.removeButton(BACKPACK).waitFor({ state: 'visible' })
+  })
+
+  test('TC-012 | Remove product from inventory @regression', async () => {
+    await inventory.addToCart(BACKPACK)
+    await inventory.removeFromCart(BACKPACK)
+    await inventory.assertCartIsEmpty()
+    await inventory.addToCartButton(BACKPACK).waitFor({ state: 'visible' })
   })
 
   // ---- CART ---------------------------------------------------
 
-  test('TC-SAUCE-CART-001 | Positive | Cart lists the products that were added', async () => {
+  test('TC-013 | Cart contains multiple selected products @smoke @regression', async () => {
     await inventory.addToCart(BACKPACK)
     await inventory.addToCart(BIKE_LIGHT)
     await inventory.assertCartBadgeCount(2)
@@ -90,7 +104,7 @@ test.describe.serial('SauceDemo — Full Purchase Flow', () => {
     await cart.assertContainsItem('Sauce Labs Bike Light')
   })
 
-  test('TC-SAUCE-CART-002 | Positive | Removing an item from the cart updates it', async () => {
+  test('TC-014 | Remove one of multiple cart items @regression', async () => {
     await inventory.addToCart(BACKPACK)
     await inventory.addToCart(BIKE_LIGHT)
     await inventory.openCart()
@@ -100,9 +114,47 @@ test.describe.serial('SauceDemo — Full Purchase Flow', () => {
     await cart.assertContainsItem('Sauce Labs Bike Light')
   })
 
+  test('TC-015 | Cart survives inventory and cart navigation @regression', async () => {
+    await inventory.addToCart(BACKPACK)
+    await inventory.openCart()
+    await cart.assertContainsItem('Sauce Labs Backpack')
+
+    await cart.continueShopping()
+    await inventory.assertCartBadgeCount(1)
+    await inventory.openCart()
+    await cart.assertContainsItem('Sauce Labs Backpack')
+  })
+
   // ---- CHECKOUT (full, through confirmation) ------------------
 
-  test('TC-SAUCE-CHK-001 | Positive | Complete purchase reaches the confirmation page', async () => {
+  test('TC-016 | Checkout requires first name @regression', async () => {
+    await inventory.addToCart(BACKPACK)
+    await inventory.openCart()
+    await cart.checkout()
+
+    await checkout.fillBuyerInfo(undefined, sd.buyer.lastName, sd.buyer.postalCode)
+    await checkout.assertErrorContains('First Name is required')
+  })
+
+  test('TC-017 | Checkout requires last name @regression', async () => {
+    await inventory.addToCart(BACKPACK)
+    await inventory.openCart()
+    await cart.checkout()
+
+    await checkout.fillBuyerInfo(sd.buyer.firstName, undefined, sd.buyer.postalCode)
+    await checkout.assertErrorContains('Last Name is required')
+  })
+
+  test('TC-018 | Checkout requires postal code @regression', async () => {
+    await inventory.addToCart(BACKPACK)
+    await inventory.openCart()
+    await cart.checkout()
+
+    await checkout.fillBuyerInfo(sd.buyer.firstName, sd.buyer.lastName, undefined)
+    await checkout.assertErrorContains('Postal Code is required')
+  })
+
+  test('TC-019 | Overview has correct item and total @regression', async () => {
     await inventory.addToCart(BACKPACK)
     await inventory.openCart()
     await cart.checkout()
@@ -111,17 +163,20 @@ test.describe.serial('SauceDemo — Full Purchase Flow', () => {
     await checkout.assertOnOverview()
     await checkout.assertOverviewItemCount(1)
 
-    await checkout.finish()
-    await checkout.assertOrderComplete()
+    await checkout.assertOverviewContainsItem('Sauce Labs Backpack')
+    await checkout.assertTotalIsConsistent()
   })
 
-  test('TC-SAUCE-CHK-002 | Negative | Checkout info form requires the postal code', async () => {
+  test('TC-020 | Complete an order @smoke @regression', async () => {
     await inventory.addToCart(BACKPACK)
     await inventory.openCart()
+    await cart.assertContainsItem('Sauce Labs Backpack')
     await cart.checkout()
 
-    // First + last name but NO postal code.
-    await checkout.fillBuyerInfo(sd.buyer.firstName, sd.buyer.lastName, undefined)
-    await checkout.assertErrorContains('Postal Code is required')
+    await checkout.fillBuyerInfo(sd.buyer.firstName, sd.buyer.lastName, sd.buyer.postalCode)
+    await checkout.assertOnOverview()
+
+    await checkout.finish()
+    await checkout.assertOrderComplete()
   })
 })

@@ -35,6 +35,11 @@ export class CartPage {
     return this
   }
 
+  async continueShopping(): Promise<this> {
+    await this.continueShoppingButton.click()
+    return this
+  }
+
   // ---- Assertions ---------------------------------------------
 
   async assertItemCount(expected: number): Promise<this> {

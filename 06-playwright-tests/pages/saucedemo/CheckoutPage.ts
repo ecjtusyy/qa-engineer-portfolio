@@ -15,6 +15,10 @@ export class CheckoutPage {
   readonly errorMessage: Locator
   readonly finishButton: Locator
   readonly overviewItems: Locator
+  readonly overviewItemNames: Locator
+  readonly itemSubtotal: Locator
+  readonly tax: Locator
+  readonly total: Locator
   readonly completeHeader: Locator
 
   constructor(page: Page) {
@@ -26,6 +30,10 @@ export class CheckoutPage {
     this.errorMessage  = page.locator('[data-test="error"]')
     this.finishButton  = page.locator('[data-test="finish"]')
     this.overviewItems = page.locator('.cart_item')
+    this.overviewItemNames = page.locator('.inventory_item_name')
+    this.itemSubtotal = page.locator('[data-test="subtotal-label"]')
+    this.tax = page.locator('[data-test="tax-label"]')
+    this.total = page.locator('[data-test="total-label"]')
     this.completeHeader = page.locator('[data-test="complete-header"]')
   }
 
@@ -53,6 +61,26 @@ export class CheckoutPage {
 
   async assertOverviewItemCount(expected: number): Promise<this> {
     await expect(this.overviewItems).toHaveCount(expected)
+    return this
+  }
+
+  async assertOverviewContainsItem(name: string): Promise<this> {
+    await expect(this.overviewItemNames.filter({ hasText: name })).toBeVisible()
+    return this
+  }
+
+  async assertTotalIsConsistent(): Promise<this> {
+    const readAmount = async (locator: Locator): Promise<number> => {
+      const text = await locator.innerText()
+      const match = text.match(/\$(\d+\.\d{2})/)
+      expect(match, `amount should be present in: ${text}`).not.toBeNull()
+      return Number(match![1])
+    }
+
+    const subtotal = await readAmount(this.itemSubtotal)
+    const tax = await readAmount(this.tax)
+    const total = await readAmount(this.total)
+    expect(total, 'total should equal subtotal plus tax').toBeCloseTo(subtotal + tax, 2)
     return this
   }
 

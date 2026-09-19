@@ -2,7 +2,7 @@
   "name": "qa-engineer-portfolio-playwright",
   "version": "1.0.0",
   "private": true,
-  "description": "Cross-browser end-to-end tests with Playwright + TypeScript. Companion to the Cypress suite — same test targets, different framework, different language.",
+  "description": "Playwright + TypeScript automation for the focused SauceDemo QA case study, with smoke and regression suites.",
   "scripts": {
     "test": "playwright test",
     "test:ui": "playwright test --ui",
@@ -12,8 +12,11 @@
     "test:demoblaze": "playwright test tests/demoblaze",
     "test:ae": "playwright test tests/automationexercise",
     "test:saucedemo": "playwright test tests/saucedemo",
+    "test:smoke": "playwright test tests/saucedemo --project=chromium --grep @smoke",
+    "test:regression": "playwright test tests/saucedemo --project=chromium --grep @regression",
     "test:theinternet": "playwright test tests/theinternet",
     "test:a11y": "playwright test tests/accessibility --project=chromium",
+    "typecheck": "tsc --noEmit",
     "report": "playwright show-report",
     "trace": "playwright show-trace"
   },
