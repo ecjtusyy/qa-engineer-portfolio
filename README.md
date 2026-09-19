@@ -1,152 +1,127 @@
-# QA Engineer Portfolio
+# QA Engineering Portfolio
 
-**English** | [Azərbaycanca](./README.az.md)
+[![SauceDemo Playwright](https://github.com/ecjtusyy/qa-engineer-portfolio/actions/workflows/playwright.yml/badge.svg)](https://github.com/ecjtusyy/qa-engineer-portfolio/actions/workflows/playwright.yml)
+![Playwright](https://img.shields.io/badge/Playwright-TypeScript-2EAD33?logo=playwright&logoColor=white)
+![Test Design](https://img.shields.io/badge/QA-Traceable_Test_Design-2563EB)
 
-> End-to-end Quality Assurance portfolio demonstrating the **full QA lifecycle** on real-world e-commerce applications — from manual test design and bug reporting through API testing, database validation, and UI automation across multiple frameworks.
+## Overview
 
-[![Cypress E2E](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/cypress.yml/badge.svg)](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/cypress.yml)
-[![Playwright Cross-Browser](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/playwright.yml/badge.svg)](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/playwright.yml)
-[![Accessibility](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/accessibility.yml/badge.svg)](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/accessibility.yml)
-[![Newman API](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/newman.yml/badge.svg)](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/newman.yml)
-[![SQL Queries](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/sql.yml/badge.svg)](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/sql.yml)
-[![k6 Performance](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/k6.yml/badge.svg)](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/k6.yml)
-[![Selenium Java](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/selenium.yml/badge.svg)](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/selenium.yml)
-[![GitLab CI](https://img.shields.io/badge/GitLab_CI-configured-FC6D26?logo=gitlab&logoColor=white)](https://gitlab.com/orkhanaliyev/qa-engineer-portfolio/-/blob/main/.gitlab-ci.yml)
+This fork turns a broad collection of QA demos into one focused, interview-ready **SauceDemo QA case study**. It demonstrates a complete and evidence-based testing workflow:
 
-> Dual-hosted on **[GitHub](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio)** and **[GitLab](https://gitlab.com/orkhanaliyev/qa-engineer-portfolio)**. All automated CI runs on **GitHub Actions** (seven path-scoped workflows, incl. browser E2E and headless Selenium); a manual-trigger **[`.gitlab-ci.yml`](./.gitlab-ci.yml)** mirrors the fast headless suites (SQL, API, k6 smoke) on GitLab CI.
+```text
+Requirements → Test Design → Test Cases → RTM
+             → Smoke / Regression → Playwright
+             → Execution → Test Report
+```
 
-![Manual Testing](https://img.shields.io/badge/Manual_Testing-✓-success)
-![Jira](https://img.shields.io/badge/Jira-0052CC?logo=jira&logoColor=white)
-![SQL](https://img.shields.io/badge/SQL-4479A1?logo=mysql&logoColor=white)
-![Postman](https://img.shields.io/badge/Postman-FF6C37?logo=postman&logoColor=white)
-![Cypress](https://img.shields.io/badge/Cypress-17202C?logo=cypress&logoColor=white)
-![Playwright](https://img.shields.io/badge/Playwright-2EAD33?logo=playwright&logoColor=white)
-![Selenium](https://img.shields.io/badge/Selenium-43B02A?logo=selenium&logoColor=white)
-![Java](https://img.shields.io/badge/Java-ED8B00?logo=openjdk&logoColor=white)
-![k6](https://img.shields.io/badge/k6-7D64FF?logo=k6&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?logo=githubactions&logoColor=white)
+The goal is not framework count. The goal is to show how business risk becomes traceable coverage, executable checks, and an honest release signal.
 
----
+## Core Case Study: SauceDemo
 
-## About This Portfolio
+[SauceDemo](https://www.saucedemo.com/) is a public training storefront with stable demo users and a complete login-to-order journey. This project covers authentication, product listing and sorting, cart state, checkout validation, overview totals, and order completion.
 
-This repository documents my work as a **QA Engineer** testing two e-commerce applications end-to-end:
+| Scope | Current implementation |
+|---|---|
+| Requirements | 10 concise, risk-focused requirements |
+| Test cases | 20 cases across happy path, negative, boundary/validation, and state transition coverage |
+| Traceability | Every requirement maps to a documented case and a real automated test |
+| Smoke | 4 business-critical checks |
+| Regression | All 20 SauceDemo checks |
+| Automation | Playwright + TypeScript + Page Object Model |
+| CI | Chromium regression and HTML report artifact in GitHub Actions |
 
-- **[Automation Exercise](https://automationexercise.com/)** — full e-commerce flow (UI + REST API)
-- **[SauceDemo](https://www.saucedemo.com/)** — Swag Labs storefront (UI focus)
+## Key Deliverables
 
-Each section covers a distinct QA discipline. Together they tell one story: **a tester who can design coverage, find bugs, communicate them clearly, and prevent regressions through automation.**
+- [Requirements](./docs/saucedemo/REQUIREMENTS.md)
+- [Test Cases](./docs/saucedemo/TEST_CASES.md)
+- [Requirements Traceability Matrix](./docs/saucedemo/RTM.md)
+- [Test Execution Summary](./docs/saucedemo/TEST_EXECUTION_SUMMARY.md)
+- [Upstream Audit](./docs/UPSTREAM_AUDIT.md)
 
----
+## Automated Testing
 
-## What's Inside
+The focused suite is under [`06-playwright-tests/tests/saucedemo`](./06-playwright-tests/tests/saucedemo/). Stable `data-test` selectors, Playwright locators, assertions, and auto-waiting are used instead of fixed sleeps. The coverage includes:
 
-| # | Section | Focus | Tech |
-|---|---|---|---|
-| 01 | [Manual Testing](./01-manual-testing/) | Test plans, test cases, bug reports, checklists | Excel, Markdown |
-| 02 | [Jira Workflow](./02-jira-workflow/) | Sprint boards, bug lifecycle, dashboards | Jira |
-| 03 | [SQL Queries](./03-sql-queries/) | Data validation queries, joins, window functions | SQL |
-| 04 | [API Testing](./04-postman-api-testing/) | REST API collections, env variables, CI runs | Postman, Newman |
-| 05 | [Cypress E2E](./05-cypress-tests/) | UI automation, Page Object Model | Cypress, JavaScript |
-| 06 | [Playwright E2E](./06-playwright-tests/) | Cross-browser automation, fixtures | Playwright, TypeScript |
-| 07 | [Selenium + Java](./07-selenium-java/) | TestNG framework, hand-rolled POM, SauceDemo + Demoblaze, headless-Chrome CI | Selenium 4, Java 17, TestNG, Maven |
-| 08 | [Performance (k6)](./08-performance-k6/) | Smoke / load / stress, thresholds as gates, per-endpoint budgets | k6, JavaScript |
+- successful, invalid, locked, and missing-field login scenarios;
+- product completeness plus name/price sorting;
+- add, remove, multi-item, and navigation-state cart behavior;
+- all required checkout fields;
+- item and subtotal/tax/total consistency on the overview;
+- complete order confirmation.
 
-Each section has its own README with run instructions and screenshots.
-
-**Cross-cutting documents** tie the sections together:
-
-- 🧭 **[Master Test Strategy](./TEST-STRATEGY.md)** — the portfolio-wide defense-in-depth quality model: how all 8 layers fit, the risk-based coverage decisions, and the CI gate architecture
-- 🔗 **[Requirements Traceability Matrix](./01-manual-testing/requirements-traceability-matrix.md)** — every requirement → manual TC → automated test (CY/PW/SE/API/k6) → bug, in one view (63 requirements)
-- 📋 **[Test Plan](./01-manual-testing/test-plan.md)** · **[Cycle 1 Execution Summary](./01-manual-testing/test-execution-summary.md)** — the per-cycle plan and results with a go/no-go recommendation
-
----
-
-## Highlights
-
-- **65 manual test cases** covering login, registration, search, cart, and checkout flows
-- **6 documented bug reports** — two user-enumeration security findings (one UI, one API), a 404 broken-links finding on a production bank, a WCAG accessibility failure, a cart-persistence bug, and a UX whitespace bug — each surfaced through a *different* testing layer
-- **Master Test Strategy** — a portfolio-wide, defense-in-depth quality model showing how all 8 sections layer into one approach (the same requirement verified at manual / API / UI / security layers), the real risk-based coverage trade-offs, and the CI gate architecture
-- **Requirements Traceability Matrix** mapping **63 requirements** → test cases → automated tests (Cypress / Playwright / Selenium / API / **k6**) → bugs across all sections, plus a **Cycle 1 test execution summary** with metrics and a go/no-go recommendation
-- **Smoke + regression checklists** with P0/P1/P2 prioritization
-- **Jira workflow** — custom bug-lifecycle diagram (Mermaid), 15+ JQL queries grouped by daily use case, drag-droppable CSV that imports the bug reports as real Jira tickets
-- **Cypress E2E framework** with Page Object Model and Mochawesome reporting — 12 specs across 7 sites (SauceDemo, Demoblaze, Automation Exercise login+cart, **two production banks** ABB Bank + Rabitabank, Tap.az, The Internet), **82 test cases** — including a **complete SauceDemo purchase flow through order confirmation** and advanced **element-handling techniques** (iframes, JS alerts, async waits, file upload, multi-window) on The Internet playground
-- **Postman + Newman API suite** — **two** API targets: Automation Exercise's 14 endpoints (always-200 quirk, chained user lifecycle) **and** the restful-booker REST API (token auth, full CRUD POST/GET/PUT/PATCH/DELETE, real 403/404 negative cases) — 27 requests, 65+ assertions, both green in CI
-- **SQL validation suite** — SQLite e-commerce schema, 19 queries (basic / joins / subqueries / window functions / QA validation), 5 intentionally planted data-quality bugs that the validation queries surface, runs in <10s
-- **Playwright cross-browser suite** in **TypeScript** — mirrors the Cypress login + cart + **full SauceDemo checkout** flows on **Chromium, Firefox, and WebKit (Safari)** in a parallel CI matrix; Trace Viewer artifacts on failure
-- **Accessibility audit (WCAG 2.1 AA)** with `@axe-core/playwright` — 7 page audits across AE + Demoblaze, baseline-as-regression-gate so CI catches a11y debt growing without failing on every minor warning; full findings documented in [`AUDIT-RESULTS.md`](./06-playwright-tests/AUDIT-RESULTS.md)
-- **Selenium 4 + Java 17 + TestNG framework** — hand-rolled POM (`By` constants + explicit waits, no PageFactory), two sites (**SauceDemo** login/inventory/cart/**full purchase** + **Demoblaze** login), **headless-Chrome CI** on every push; the same Demoblaze login flow exists in **3 languages** (JS/TS/Java) for a side-by-side diff. Includes a deliberate **CI-scope decision**: the multi-step checkout is flaky against the throttled public SauceDemo server, so CI gates on the deterministic subset and the full purchase runs locally — *a flaky test in a blocking gate is worse than a smaller reliable one*
-- **Performance suite with k6** — smoke / load / stress scripts against the **same restful-booker API** tested functionally in section 04 ("does it work?" *and* "does it hold up?"); thresholds used as **build-failing gates**, **per-endpoint (tagged) latency budgets**, and two real findings surfaced just by load-testing (the API defaults to **XML** without an `Accept` header; the free dyno's **cold-start** made it look slower at 1 user than at 10). Smoke-only in CI to stay a respectful citizen on a public server
-- **GitHub Actions CI** runs Cypress, Playwright (×3 browsers), Newman, SQL, k6, AND headless Selenium on every push, uploads reports as artifacts, and shows seven live green badges in this README
-
----
-
-## How to Run
-
-Each automation framework has its own setup instructions in its folder. Quick start:
+### Smoke Testing
 
 ```bash
-# Clone the repo
-git clone https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio.git
-cd qa-engineer-portfolio
-
-# Run Cypress tests
-cd 05-cypress-tests
-npm install
-npx cypress run
-
-# Run Playwright tests
-cd ../06-playwright-tests
-npm install
-npx playwright test
-
-# Run API tests with Newman
-cd ../04-postman-api-testing
-newman run collections/automation-exercise-api.postman_collection.json
+cd 06-playwright-tests
+npm ci
+npx playwright install chromium
+npm run test:smoke
 ```
 
----
+### Regression Testing
 
-## Test Strategy at a Glance
-
-```
-                   ┌─────────────────────────┐
-                   │   Manual Exploration    │   ← discover, design coverage
-                   └───────────┬─────────────┘
-                               │
-              ┌────────────────┼────────────────┐
-              │                │                │
-       ┌──────▼──────┐  ┌──────▼──────┐  ┌─────▼──────┐
-       │  Bug Report │  │ Test Cases  │  │  Checklist │   ← document
-       │   (Jira)    │  │   (Excel)   │  │ (Markdown) │
-       └──────┬──────┘  └──────┬──────┘  └─────┬──────┘
-              │                │                │
-              └────────────────┼────────────────┘
-                               │
-                   ┌───────────▼─────────────┐
-                   │  Regression Automation  │   ← prevent recurrence
-                   │ (Cypress / Playwright)  │
-                   └───────────┬─────────────┘
-                               │
-                   ┌───────────▼─────────────┐
-                   │     CI/CD on push       │   ← shift-left feedback
-                   │   (GitHub Actions)      │
-                   └─────────────────────────┘
+```bash
+cd 06-playwright-tests
+npm run test:regression
 ```
 
----
+### TypeScript Compile Check
 
-## About Me
+```bash
+cd 06-playwright-tests
+npm run typecheck
+```
 
-**Orkhan Aliyev** — QA Engineer focused on building reliable, scalable test coverage for web applications.
+## Verified Results
 
-- 📧 mr.orkhan.aliyev@gmail.com
-- 💼 [LinkedIn](https://www.linkedin.com/in/orkhan-aliyev-qa/)
-- 🐙 [GitHub](https://github.com/orkhan-aliyev-qa)
-- 🦊 [GitLab](https://gitlab.com/orkhanaliyev)
+Local focused execution on **2026-09-19**, Chromium headless:
 
----
+| Check | Passed | Failed | Skipped | Status |
+|---|---:|---:|---:|---|
+| SauceDemo Smoke | 4 | 0 | 0 | PASS |
+| SauceDemo Regression | 20 | 0 | 0 | PASS |
+| TypeScript compile | — | — | — | PASS |
 
-## License
+These figures come from the current focused runs, not from upstream historical claims. See the [execution summary](./docs/saucedemo/TEST_EXECUTION_SUMMARY.md) for the environment, timing, and boundaries.
 
-Released under the [MIT License](./LICENSE) — free to read, reuse, and learn from. This portfolio is for educational and demonstration purposes; test targets are public demo sites that explicitly permit automated testing, and production sites (ABB, Rabitabank, Tap.az) are exercised read-only.
+## Supporting Practice Modules
+
+### API Testing Practice
+
+[`04-postman-api-testing`](./04-postman-api-testing/) contains a separate Restful-Booker Newman exercise. The audited baseline is **13 requests / 24 assertions / PASS**. It is supporting API practice and is **not** presented as a SauceDemo API.
+
+### SQL Validation Practice
+
+[`03-sql-queries`](./03-sql-queries/) is an independent SQLite validation exercise covering `SELECT`, joins, grouping, aggregation, duplicate detection, and data-consistency checks. The audited baseline is **19/19 PASS**. It is **not** SauceDemo's backend database and no UI-to-database consistency claim is made.
+
+## Known Limitations
+
+- Automation Exercise automation was blocked by Imunify360 anti-bot verification during the upstream audit.
+- Selenium was not run locally because JDK/Maven were unavailable.
+- k6 was not run locally because k6 was unavailable.
+- The Internet iframe navigation instability was observed during the upstream audit.
+- SauceDemo is a shared external demo environment, so availability is outside this repository's control.
+
+These are documented constraints, not hidden or converted into false passing results.
+
+## My Improvements
+
+- Audited the upstream evidence and documented result and traceability inconsistencies.
+- Focused the portfolio on a stable SauceDemo business case instead of unrelated public-site demos.
+- Added 10 explicit requirements and 20 risk-based test cases with current execution status.
+- Built a clean Requirement → Test Case → Automated Test → Result matrix.
+- Organized verified Smoke and Regression suites and a focused GitHub Actions gate.
+
+## Repository Map
+
+| Path | Purpose |
+|---|---|
+| [`docs/saucedemo`](./docs/saucedemo/) | Focused QA planning, design, traceability, and execution evidence |
+| [`06-playwright-tests`](./06-playwright-tests/) | Core SauceDemo automation used by this case study |
+| [`03-sql-queries`](./03-sql-queries/) | Independent SQL validation practice |
+| [`04-postman-api-testing`](./04-postman-api-testing/) | Independent API testing practice |
+| Other numbered folders | Preserved upstream learning material; not part of the focused execution claim |
+
+## Attribution
+
+Forked from [orkhan-aliyev-qa/qa-engineer-portfolio](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio). The upstream Git history, original attribution, and [MIT License](./LICENSE) are preserved. The focused SauceDemo case study and changes listed under **My Improvements** are the work added in this fork.

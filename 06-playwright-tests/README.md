@@ -1,251 +1,62 @@
-# 06 — Playwright E2E Tests
+# Playwright + TypeScript
 
-Cross-browser end-to-end tests with **Playwright + TypeScript**, running on **Chromium, Firefox, and WebKit** in a CI matrix. Companion to the Cypress suite — same targets, different framework, different language.
+This folder contains the automation layer for the focused [SauceDemo QA case study](../docs/saucedemo/REQUIREMENTS.md). The core portfolio gate runs SauceDemo on Chromium; upstream tests for other public demo sites remain available for reference but are outside the focused execution claim.
 
-[![Playwright Cross-Browser](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/playwright.yml/badge.svg)](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/playwright.yml)
-[![Accessibility](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/accessibility.yml/badge.svg)](https://github.com/orkhan-aliyev-qa/qa-engineer-portfolio/actions/workflows/accessibility.yml)
+## Focused Suites
 
-![Playwright](https://img.shields.io/badge/Playwright-1.48-2EAD33?logo=playwright&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.4-3178C6?logo=typescript&logoColor=white)
-![Node](https://img.shields.io/badge/Node-20.x-339933?logo=node.js&logoColor=white)
-![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?logo=githubactions&logoColor=white)
+| Suite | Selection | Cases | Purpose |
+|---|---|---:|---|
+| Smoke | `@smoke` | 4 | Valid login, add product, cart verification, order completion |
+| Regression | `@regression` | 20 | All documented SauceDemo positive, negative, validation, and state cases |
 
----
+The source of truth for case IDs and expected behavior is:
 
-## Why Playwright Alongside Cypress?
+- [Test Cases](../docs/saucedemo/TEST_CASES.md)
+- [RTM](../docs/saucedemo/RTM.md)
+- [Execution Summary](../docs/saucedemo/TEST_EXECUTION_SUMMARY.md)
 
-The portfolio includes BOTH Cypress (JS) and Playwright (TS) on purpose. Recruiters and team leads see a candidate who can pick the right tool for the job, not someone locked into one framework.
+## Run Locally
 
-| Aspect | Cypress | Playwright |
-|---|---|---|
-| Language | JavaScript / TypeScript | TypeScript / JavaScript / Python / .NET / Java |
-| Browsers | Chrome, Edge, Firefox, Electron | **Chromium, Firefox, WebKit (Safari)** |
-| Parallel runs in OSS | Sharding only | **Built-in, free, multi-worker** |
-| Multi-tab / multi-origin | Limited | **Native** |
-| iframe testing | Workarounds | First-class |
-| Mobile emulation | Limited | **Full device emulation** |
-| Time-travel debugger | DOM snapshots | **Trace Viewer** — DOM + network + screenshots, scrubbable |
-| `await` everywhere | No (auto-queue) | Yes (explicit async) |
+```bash
+npm ci
+npx playwright install chromium
 
-The "best" answer depends on the project. This portfolio shows fluency in both.
-
----
-
-## What's Covered
-
-| Site | Spec | Test Cases | Maps to |
-|---|---|---|---|
-| [Demoblaze](https://www.demoblaze.com/) | `tests/demoblaze/login.spec.ts` | 6 (3 positive, 3 negative) | [`login-test-cases.csv`](../01-manual-testing/test-cases/login-test-cases.csv) |
-| [Automation Exercise](https://automationexercise.com/) | `tests/automationexercise/login.spec.ts` | 12 (5 positive, 5 negative, 2 UI/security) | [`login-test-cases.csv`](../01-manual-testing/test-cases/login-test-cases.csv) |
-| [Automation Exercise](https://automationexercise.com/) | `tests/automationexercise/cart.spec.ts` | 8 (7 positive, 1 negative) | [`cart-test-cases.csv`](../01-manual-testing/test-cases/cart-test-cases.csv) |
-| [SauceDemo](https://www.saucedemo.com/) | `tests/saucedemo/login.spec.ts` | 6 (login personas) | Standalone |
-| [SauceDemo](https://www.saucedemo.com/) | `tests/saucedemo/checkout.spec.ts` | 8 (**full purchase → confirmation**, serial) | [`checkout-test-cases.csv`](../01-manual-testing/test-cases/checkout-test-cases.csv) |
-| [The Internet](https://the-internet.herokuapp.com/) | `tests/theinternet/form-elements.spec.ts` | 4 (dropdown, checkboxes, dynamic DOM, number input) | Standalone |
-| [The Internet](https://the-internet.herokuapp.com/) | `tests/theinternet/interactions.spec.ts` | 7 (alerts, iframe, async wait, file upload, **real 2nd tab**) | Standalone |
-| AE + Demoblaze | `tests/accessibility/*.a11y.spec.ts` | 7 WCAG 2.1 AA audits | See [`AUDIT-RESULTS.md`](./AUDIT-RESULTS.md) |
-
-Both specs are **direct counterparts of the Cypress specs** under `05-cypress-tests/`. Same TC IDs, same assertions — different framework. A reader can compare them side-by-side to see how the same testing intent translates between Cypress and Playwright.
-
----
-
-## The Page Object Model in Playwright
-
-```ts
-// pages/automationexercise/LoginPage.ts
-import { Page, Locator, expect } from '@playwright/test'
-
-export class LoginPage {
-  readonly emailInput: Locator
-  readonly passwordInput: Locator
-  readonly submitButton: Locator
-
-  constructor(public page: Page) {
-    this.emailInput    = page.locator('input[data-qa="login-email"]')
-    this.passwordInput = page.locator('input[data-qa="login-password"]')
-    this.submitButton  = page.locator('button[data-qa="login-button"]')
-  }
-
-  async loginAs(email: string, password: string) {
-    await this.emailInput.fill(email)
-    await this.passwordInput.fill(password)
-    await this.submitButton.click()
-  }
-
-  async assertLoggedInAs(name?: string) {
-    const label = this.page.getByRole('link', { name: /Logged in as/ })
-    await expect(label).toBeVisible()
-    if (name) await expect(label).toContainText(name)
-  }
-}
+npm run typecheck
+npm run test:smoke
+npm run test:regression
 ```
 
-**Spec reads like business intent:**
+Open the last generated HTML report with:
 
-```ts
-test('TC-AE-LOGIN-002 | Valid credentials log the user in', async ({ page }) => {
-  test.skip(SKIP_AUTH, 'Requires pre-registered user — skipped in CI')
-
-  const loginPage = new LoginPage(page)
-  await loginPage.visit()
-  await loginPage.loginAs(ae.valid.email, ae.valid.password)
-  await loginPage.assertLoggedInAs(ae.valid.name)
-})
+```bash
+npm run report
 ```
 
-The biggest visual difference from Cypress: **every action is `await`**. Forgetting one is the most common Playwright bug, and TypeScript's no-floating-promises lint rule catches it before commit.
+## Structure
 
----
-
-## Project Structure
-
-```
+```text
 06-playwright-tests/
+├── fixtures/test-data.ts
+├── pages/saucedemo/
+│   ├── LoginPage.ts
+│   ├── InventoryPage.ts
+│   ├── CartPage.ts
+│   └── CheckoutPage.ts
+├── tests/saucedemo/
+│   ├── login.spec.ts
+│   └── checkout.spec.ts
 ├── package.json
-├── package-lock.json                # committed for CI reproducibility
-├── playwright.config.ts             # matrix definition, retries, trace
-├── tsconfig.json                    # strict mode, path aliases
-├── AUDIT-RESULTS.md                 # WCAG 2.1 AA findings snapshot
-├── fixtures/
-│   └── test-data.ts                 # credentials + SKIP_AUTH flag
-├── pages/
-│   ├── helpers/
-│   │   └── AccessibilityAuditor.ts  # axe-core wrapper
-│   ├── demoblaze/
-│   │   └── LoginPage.ts
-│   └── automationexercise/
-│       ├── LoginPage.ts
-│       ├── ProductsPage.ts
-│       └── CartPage.ts
-├── tests/
-│   ├── demoblaze/
-│   │   └── login.spec.ts
-│   ├── automationexercise/
-│   │   ├── login.spec.ts
-│   │   └── cart.spec.ts
-│   └── accessibility/
-│       ├── ae-pages.a11y.spec.ts
-│       └── demoblaze.a11y.spec.ts
-├── playwright-report/               # HTML report — gitignored
-└── test-results/                    # traces, screenshots, videos — gitignored
+├── package-lock.json
+├── playwright.config.ts
+└── tsconfig.json
 ```
 
----
+## Design Choices
 
-## Accessibility (WCAG 2.1 AA)
+- Stable `data-test` selectors where SauceDemo provides them.
+- Page objects separate interactions and assertions from scenario intent.
+- Playwright auto-waiting and retryable assertions; no fixed sleeps.
+- A small tagged smoke set for rapid feedback and a complete tagged regression set for the CI gate.
+- Trace, screenshot, and video collection only around failures to keep routine runs lightweight.
 
-Beyond functional E2E, the suite runs **WCAG 2.1 AA audits** on every push via [`@axe-core/playwright`](https://github.com/dequelabs/axe-core-npm). Five pages audited on AE, two on Demoblaze.
-
-### How the audit gate works
-
-Demo sites have accessibility debt that we don't own. A suite that fails on every minor warning gets disabled within a week and regresses to nothing. So the policy:
-
-- **Critical violations gated by a per-page baseline.** The CI test fails ONLY when the count exceeds what was documented in [`AUDIT-RESULTS.md`](./AUDIT-RESULTS.md). A code change that makes things *worse* breaks the build; existing debt is acknowledged, not papered over.
-- **Serious / moderate / minor are reported, not gated.** Logged to the console output and saved to `playwright-report/a11y-findings-*.json` for review.
-
-This is what real production teams do — and the right place to land for portfolio work.
-
-### What's audited
-
-| Site | Pages |
-|---|---|
-| Automation Exercise | `/`, `/login`, `/products`, `/view_cart`, `/contact_us` |
-| Demoblaze | `/`, `/cart.html` |
-
-### Running the audit
-
-```bash
-npm run test:a11y                            # chromium only — a11y rules are engine-independent
-cat playwright-report/a11y-findings-ae.json  # structured JSON of findings
-```
-
-See [`AUDIT-RESULTS.md`](./AUDIT-RESULTS.md) for current findings and the prioritized "what I'd fix first" list.
-
----
-
-## Running Locally
-
-```bash
-cd 06-playwright-tests
-npm install
-npx playwright install           # download browsers (first time only, ~300 MB)
-
-npm test                         # all browsers, all tests
-npm run test:chromium            # only Chromium
-npm run test:firefox             # only Firefox
-npm run test:webkit              # only WebKit (Safari)
-npm run test:ui                  # interactive UI mode
-
-npm run test:demoblaze           # only Demoblaze tests
-npm run test:ae                  # only AE tests
-
-npm run report                   # open last HTML report
-```
-
-If you haven't registered the demo accounts (see Preconditions below), skip auth tests:
-
-```bash
-CI_SKIP_AUTH_TESTS=true npm test
-```
-
----
-
-## Trace Viewer
-
-Playwright's killer feature: when a test fails, the run produces a `.zip` trace with:
-
-- Step-by-step actions and snapshots
-- Network traffic for every request
-- Console logs
-- DOM snapshot at every step (scrub backward and forward like video)
-
-To inspect:
-
-```bash
-npx playwright show-trace test-results/.../trace.zip
-```
-
-In CI, traces are uploaded as artifacts on every failure (see workflow).
-
----
-
-## Preconditions
-
-Same as Cypress — 4 AE tests and 2 Demoblaze tests need a pre-registered user.
-
-- **CI**: `CI_SKIP_AUTH_TESTS=true` is set in the workflow, so they auto-skip.
-- **Locally**: set the same env var, OR register the accounts:
-  - Demoblaze: signup `qatestuser / Test1234` at https://www.demoblaze.com/
-  - Automation Exercise: signup `qa_orkhan@test.com / Test@1234` at https://automationexercise.com/login
-
-Credentials live in [`fixtures/test-data.ts`](./fixtures/test-data.ts).
-
----
-
-## CI Matrix
-
-[`.github/workflows/playwright.yml`](../.github/workflows/playwright.yml) runs each browser as a **separate parallel job**:
-
-| Browser | Engine | Approximate timing |
-|---|---|---|
-| chromium | Blink (Chrome family) | ~30s |
-| firefox  | Gecko                 | ~40s |
-| webkit   | WebKit (Safari)       | ~45s |
-
-`fail-fast: false` means one browser failing doesn't cancel the others — important when you need to know whether a bug is browser-specific or universal.
-
-Failed runs upload:
-- The full HTML report (per browser)
-- Traces (per browser) for failure analysis in Trace Viewer
-
----
-
-## Why These Choices
-
-| Choice | Reason |
-|---|---|
-| TypeScript strict mode | Catches missing `await`, wrong types, and undefined access before commit |
-| Matrix CI over single job | Surfaces browser-specific bugs early; failures don't mask each other |
-| Trace on first retry, not always | Trace files are large; collecting only on actual flake is the right balance |
-| `retries: 2` in CI, `0` locally | Stays strict during development; absorbs flake on slow third-party sites |
-| Same TC IDs as Cypress | Anyone reviewing the portfolio can diff the same test in both frameworks |
-| Constructor-based locators | Lazy by design (locator created, query deferred until interaction) |
+GitHub Actions installs the lockfile dependencies, type-checks the project, runs the Chromium regression suite, and uploads the HTML report. See [`.github/workflows/playwright.yml`](../.github/workflows/playwright.yml).

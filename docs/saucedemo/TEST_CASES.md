@@ -1,6 +1,6 @@
 # SauceDemo Test Cases
 
-Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is updated only from the focused Playwright regression run documented in [`TEST_EXECUTION_SUMMARY.md`](./TEST_EXECUTION_SUMMARY.md). Until that run is completed, every case remains `Not Run`.
+Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is updated only from the focused Playwright regression run documented in [`TEST_EXECUTION_SUMMARY.md`](./TEST_EXECUTION_SUMMARY.md).
 
 ## Login
 
@@ -12,7 +12,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Open the login page; inspect username, password, and login controls.
 - **Expected Result:** All three controls are visible and usable.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/login.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-002 — Standard user can log in
 
@@ -22,7 +22,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Enter valid username and password; select Login.
 - **Expected Result:** Inventory page opens.
 - **Automation Status:** Automated (Smoke, Regression) — `06-playwright-tests/tests/saucedemo/login.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-003 — Locked user is rejected
 
@@ -32,7 +32,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Enter the locked user and valid password; select Login.
 - **Expected Result:** A locked-out error is shown and the login page remains open.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/login.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-004 — Wrong password is rejected
 
@@ -42,7 +42,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Enter the standard username and an invalid password; select Login.
 - **Expected Result:** A credential-mismatch error is shown and no login occurs.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/login.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-005 — Username is required
 
@@ -52,7 +52,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Leave username empty; enter the valid password; select Login.
 - **Expected Result:** A username-required error is shown.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/login.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-006 — Password is required
 
@@ -62,7 +62,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Enter the standard username; leave password empty; select Login.
 - **Expected Result:** A password-required error is shown.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/login.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ## Products
 
@@ -74,7 +74,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Open the inventory; inspect every product row.
 - **Expected Result:** Six products are displayed; every product has a non-empty name and a numeric price.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-008 — Products sort by price low to high
 
@@ -84,7 +84,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Select Price (low to high); read displayed prices in order.
 - **Expected Result:** Prices are in ascending numeric order.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-009 — Products sort by name Z to A
 
@@ -94,7 +94,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Select Name (Z to A); read displayed names in order.
 - **Expected Result:** Names are in descending alphabetical order.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-010 — Products sort by price high to low
 
@@ -104,7 +104,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Select Price (high to low); read displayed prices in order.
 - **Expected Result:** Prices are in descending numeric order.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ## Cart
 
@@ -116,7 +116,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Add Sauce Labs Backpack.
 - **Expected Result:** Cart badge becomes `1` and the product action changes to Remove.
 - **Automation Status:** Automated (Smoke, Regression) — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-012 — Remove product from inventory
 
@@ -126,7 +126,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Select Remove for the backpack.
 - **Expected Result:** Cart badge disappears and the product action changes back to Add to cart.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-013 — Cart contains multiple selected products
 
@@ -136,7 +136,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Add Backpack and Bike Light; open the cart.
 - **Expected Result:** Badge and cart show two items with both expected names.
 - **Automation Status:** Automated (Smoke, Regression) — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-014 — Remove one of multiple cart items
 
@@ -146,7 +146,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Open the cart; remove Backpack.
 - **Expected Result:** One item remains and it is Bike Light.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-015 — Cart survives inventory/cart navigation
 
@@ -156,7 +156,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Open the cart; continue shopping; open the cart again.
 - **Expected Result:** Backpack remains in the cart after both navigation transitions.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ## Checkout
 
@@ -168,7 +168,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Leave first name empty; enter last name and postal code; continue.
 - **Expected Result:** A first-name-required error is shown and overview does not open.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-017 — Last name is required
 
@@ -178,7 +178,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Enter first name; leave last name empty; enter postal code; continue.
 - **Expected Result:** A last-name-required error is shown and overview does not open.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-018 — Postal code is required
 
@@ -188,7 +188,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Enter first and last name; leave postal code empty; continue.
 - **Expected Result:** A postal-code-required error is shown and overview does not open.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-019 — Overview has correct item and total
 
@@ -198,7 +198,7 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Enter all required buyer information; continue to overview; inspect item, subtotal, tax, and total.
 - **Expected Result:** Overview contains Backpack and displayed total equals subtotal plus tax.
 - **Automation Status:** Automated — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
 
 ### TC-020 — Complete an order
 
@@ -208,4 +208,4 @@ Test data uses SauceDemo's published demo accounts. `Latest Execution Result` is
 - **Steps:** Add Backpack; open cart; start checkout; submit valid buyer information; finish the order.
 - **Expected Result:** Completion page opens with `Thank you for your order!`.
 - **Automation Status:** Automated (Smoke, Regression) — `06-playwright-tests/tests/saucedemo/checkout.spec.ts`
-- **Latest Execution Result:** Not Run
+- **Latest Execution Result:** PASS
