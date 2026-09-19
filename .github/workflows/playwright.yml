@@ -1,4 +1,4 @@
-name: Playwright Cross-Browser
+name: SauceDemo Playwright
 
 on:
   push:
@@ -14,15 +14,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  playwright-run:
-    name: Playwright on ${{ matrix.browser }}
+  saucedemo-regression:
+    name: SauceDemo regression (Chromium)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [chromium, firefox, webkit]
+    timeout-minutes: 10
 
     defaults:
       run:
@@ -39,27 +34,23 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 06-playwright-tests/package-lock.json
 
-      - name: Install npm deps
+      - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright browser + system deps
-        # `--with-deps` installs OS-level libs that Firefox / WebKit
-        # need (libwoff, libgstreamer, etc.) — required on Ubuntu.
-        run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
 
-      - name: Run Playwright tests
-        env:
-          # Same pattern as the Cypress workflow: tests that require
-          # a pre-registered user on demoblaze.com or AE auto-skip
-          # when this is set. See fixtures/test-data.ts.
-          CI_SKIP_AUTH_TESTS: 'true'
-        run: npx playwright test --project=${{ matrix.browser }} --reporter=list,html
+      - name: Type-check Playwright project
+        run: npm run typecheck
 
-      - name: Upload HTML report
+      - name: Run SauceDemo regression
+        run: npm run test:regression -- --reporter=list,html
+
+      - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.browser }}
+          name: saucedemo-playwright-report
           path: 06-playwright-tests/playwright-report
           if-no-files-found: ignore
           retention-days: 14
@@ -68,7 +59,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-traces-${{ matrix.browser }}
+          name: saucedemo-playwright-traces
           path: 06-playwright-tests/test-results
           if-no-files-found: ignore
           retention-days: 7
